@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:pointycastle/export.dart';
 import 'package:doomsms/models/key_pair.dart' as app_models;
+import 'package:doomsms/utils/id_generator.dart';
 
 class EncryptionService {
   static const int _keySize = 2048;
@@ -188,11 +189,19 @@ class EncryptionService {
   }
 
   /// Génère un ID sécurisé
+  /// 
+  /// Utilise le générateur d'ID centralisé pour une meilleure unicité.
+  /// Retourne un ID unique de 20 caractères avec timestamp intégré.
   static String generateSecureId() {
-    final random = Random.secure();
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    return String.fromCharCodes(
-      Iterable.generate(16, (_) => chars.codeUnitAt(random.nextInt(chars.length)))
-    );
+    return IdGenerator.generateUniqueId();
+  }
+
+  /// Génère un ID au format legacy (16 caractères)
+  /// 
+  /// Maintient la compatibilité avec l'ancien format pour
+  /// les systèmes qui en ont besoin.
+  @deprecated
+  static String generateLegacyId() {
+    return IdGenerator.generateLegacyId();
   }
 }

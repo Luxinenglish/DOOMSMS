@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:doomsms/models/message.dart';
 import 'package:doomsms/models/contact.dart';
+import 'package:doomsms/utils/id_generator.dart';
 
 class P2PService {
   static const int _discoveryPort = 7001;
@@ -220,10 +221,21 @@ class P2PService {
   }
 
   /// Génère un ID unique
+  /// 
+  /// Utilise le générateur d'ID centralisé pour une meilleure unicité
+  /// et cohérence dans l'application. Retourne un ID de 20 caractères
+  /// avec timestamp intégré.
   static String generateId() {
-    final random = Random.secure();
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    return String.fromCharCodes(Iterable.generate(16, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+    return IdGenerator.generateUniqueId();
+  }
+
+  /// Génère un ID au format legacy (compatibilité)
+  /// 
+  /// Utilisé uniquement pour maintenir la compatibilité avec
+  /// d'anciens systèmes ou données existantes.
+  @deprecated
+  static String generateLegacyId() {
+    return IdGenerator.generateLegacyId();
   }
 
   void dispose() {
